@@ -4,6 +4,9 @@
     "name": "choo121600",
     "email": "choo121600@gmail.com"
   },
+  "metadata": {
+    "description": "Performance-focused HUD for Claude Code — statusLine JSON + transcript JSONL, rendered as fast composable segments."
+  },
   "plugins": [
     {
       "name": "oh-my-cchud",

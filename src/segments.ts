@@ -161,8 +161,15 @@ function output_style({ input, theme }: Ctx): string | null {
 function effort({ input, theme }: Ctx): string | null {
   const level = input.effort?.level;
   if (!level) return null; // only when the model supports reasoning effort
-  // color by intensity — "high" burns the most tokens, so flag it like a warning
-  const color = level === "high" ? theme.warn : level === "low" ? theme.muted : c.cyan;
+  // color by intensity — higher effort burns more tokens, so make it stand out
+  const color =
+    level === "xhigh" || level === "max"
+      ? theme.crit
+      : level === "high"
+        ? theme.warn
+        : level === "low"
+          ? theme.muted
+          : c.cyan;
   return `${theme.muted(theme.glyphs.effort)} ${color(level)}`;
 }
 

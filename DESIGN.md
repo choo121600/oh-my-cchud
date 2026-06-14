@@ -70,8 +70,8 @@ Default-on niceties:
 - **`rate`** shows time-to-reset, which matters most exactly when you're near the
   limit: 88% on the 7-day window means very different things at "resets in 4h" vs
   "resets in 3 days."
-- **`effort`** is colored by intensity — `high` (the token-expensive mode) gets a
-  warning color so it stands out.
+- **`effort`** is colored by intensity, since higher effort burns more tokens:
+  `xhigh`/`max` → red (crit), `high` → yellow (warn), `medium` → cyan, `low` → dim.
 
 Off by default (segments still exist; add the name to a line to enable):
 

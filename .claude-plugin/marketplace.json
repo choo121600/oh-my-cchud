@@ -1,0 +1,14 @@
+{
+  "name": "oh-my-cchud",
+  "owner": {
+    "name": "choo121600",
+    "email": "choo121600@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "oh-my-cchud",
+      "source": "./",
+      "description": "Performance-focused HUD for Claude Code (statusLine JSON + transcript JSONL)."
+    }
+  ]
+}

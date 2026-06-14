@@ -1,0 +1,19 @@
+{
+  "name": "oh-my-cchud",
+  "version": "0.1.0",
+  "description": "Performance-focused HUD for Claude Code (statusLine JSON + transcript JSONL).",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "scripts": {
+    "demo": "bun run scripts/demo.ts",
+    "build": "bun run scripts/build.ts",
+    "install-statusline": "bun run scripts/install-statusline.ts",
+    "typecheck": "bun --bun tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

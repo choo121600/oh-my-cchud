@@ -1,0 +1,10 @@
+{
+  "name": "oh-my-cchud",
+  "version": "0.1.0",
+  "description": "Performance-focused HUD for Claude Code. Two data sources — statusLine JSON (stdin) + transcript JSONL — rendered as fast, composable segments.",
+  "author": {
+    "name": "choo121600",
+    "email": "choo121600@gmail.com"
+  },
+  "keywords": ["statusline", "hud", "monitoring", "context", "bun"]
+}

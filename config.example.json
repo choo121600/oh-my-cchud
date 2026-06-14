@@ -1,0 +1,17 @@
+{
+  "//": "Copy to ~/.claude/oh-my-cchud.json (or set OH_MY_CCHUD_CONFIG) to override. Shallow-merged over defaults — omit anything you don't want to change.",
+  "theme": "default",
+  "//theme": "one of: default (Unicode) | nerd (Nerd Font) | ascii (plain). Or set OH_MY_CCHUD_THEME=ascii to preview.",
+  "separator": "  ",
+  "lines": [
+    ["project", "model", "worktree", "git", "pr", "context", "rate"],
+    ["effort", "thinking", "agents", "todos"]
+  ],
+  "//opt-in": "omitted by default; add to a line to enable: cost (flat-rate artifact for Pro/Max; rate is the real signal) · tools (redundant with Claude Code's live UI + lags) · output_style (rarely-changed, user-set, drives no action)",
+  "//segments": "available: model context rate cost git tools todos agents worktree output_style effort thinking pr",
+  "context": { "barWidth": 14, "warn": 70, "crit": 90 },
+  "rate": { "warn": 60, "crit": 85, "reset": "relative" },
+  "//rate.reset": "초기화 표시: relative (in 2h12m) | clock (14:30) | off",
+  "transcript": { "tailBytes": 131072, "recentTools": 3 },
+  "git": { "cacheMs": 3000 }
+}

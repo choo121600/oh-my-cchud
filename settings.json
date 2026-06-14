@@ -1,0 +1,7 @@
+{
+  "//": "Bundled plugin settings. Only `agent` and `subagentStatusLine` are applied from a plugin (the main `statusLine` must be wired in your own ~/.claude/settings.json — see README).",
+  "subagentStatusLine": {
+    "type": "command",
+    "command": "bun \"${CLAUDE_PLUGIN_ROOT}/src/subagent-statusline.ts\""
+  }
+}

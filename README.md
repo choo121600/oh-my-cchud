@@ -116,3 +116,7 @@ bun run scripts/demo.ts [transcript.jsonl]   # all three themes, no live session
 - Architecture, performance & design rationale — [DESIGN.md](DESIGN.md)
 - Official statusLine docs — https://code.claude.com/docs/en/statusline
 - Inspiration — [jarrodwatts/claude-hud](https://github.com/jarrodwatts/claude-hud), [npow/oh-my-claude](https://github.com/npow/oh-my-claude)
+
+## License
+
+[MIT](LICENSE) © choo121600

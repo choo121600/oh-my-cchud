@@ -107,3 +107,7 @@ bun run scripts/demo.ts [transcript.jsonl]   # 라이브 세션 없이 테마 3�
 - 아키텍처 · 성능 · 설계 근거 — [DESIGN.md](DESIGN.md)
 - 공식 statusLine 문서 — https://code.claude.com/docs/en/statusline
 - 영감 — [jarrodwatts/claude-hud](https://github.com/jarrodwatts/claude-hud), [npow/oh-my-claude](https://github.com/npow/oh-my-claude)
+
+## 라이센스
+
+[MIT](LICENSE) © choo121600

@@ -6,5 +6,6 @@
     "name": "choo121600",
     "email": "choo121600@gmail.com"
   },
+  "license": "MIT",
   "keywords": ["statusline", "hud", "monitoring", "context", "bun"]
 }

@@ -18,11 +18,13 @@
 
 ```bash
 /plugin marketplace add choo121600/oh-my-cchud
-/plugin install oh-my-cchud
+/plugin install oh-my-cchud@oh-my-cchud
+/reload-plugins          # 필수 — 플러그인 활성화. 이걸 안 하면 커맨드가 등록 안 됨
 /oh-my-cchud:install     # 메인 statusLine 연결 — /plugin update 후 다시 실행
 ```
 
 **Bun**이 PATH에 있어야 합니다(상태줄이 `bun`을 실행). 플러그인은 `subagentStatusLine`만 자동 적용하므로, `/oh-my-cchud:install`이 메인 HUD를 `~/.claude/settings.json`에 **업데이트에도 안 깨지는 고정 런처**로 연결합니다.
+(푸시 전에 이미 마켓플레이스를 추가했다면 `/plugin marketplace update oh-my-cchud` 를 먼저 실행하세요.)
 
 ### 수동 연결 (clone)
 

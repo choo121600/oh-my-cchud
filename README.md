@@ -19,13 +19,15 @@ zero runtime deps.
 
 ```bash
 /plugin marketplace add choo121600/oh-my-cchud
-/plugin install oh-my-cchud
+/plugin install oh-my-cchud@oh-my-cchud
+/reload-plugins          # REQUIRED — activates the plugin; its commands aren't registered until you reload
 /oh-my-cchud:install     # wire the main statusLine — re-run after each /plugin update
 ```
 
 Requires **Bun** on PATH (the status line runs `bun`). A plugin can only auto-apply
 `subagentStatusLine`, so `/oh-my-cchud:install` wires the main HUD into your
 `~/.claude/settings.json` through a stable launcher that survives plugin updates.
+(Re-added the marketplace before this push? Run `/plugin marketplace update oh-my-cchud` first.)
 
 ### Manual (clone)
 

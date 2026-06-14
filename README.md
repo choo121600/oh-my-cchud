@@ -20,15 +20,20 @@ zero runtime deps.
 ```bash
 /plugin marketplace add choo121600/oh-my-cchud
 /plugin install oh-my-cchud
+/oh-my-cchud:install     # wire the main statusLine — re-run after each /plugin update
 ```
 
-A plugin can't auto-apply the main `statusLine` (only `subagentStatusLine`), so wire it once:
+Requires **Bun** on PATH (the status line runs `bun`). A plugin can only auto-apply
+`subagentStatusLine`, so `/oh-my-cchud:install` wires the main HUD into your
+`~/.claude/settings.json` through a stable launcher that survives plugin updates.
+
+### Manual (clone)
 
 ```bash
-bun run scripts/install-statusline.ts      # writes statusLine into ~/.claude/settings.json (backup made)
+bun run scripts/install-statusline.ts    # writes statusLine into ~/.claude/settings.json (backup made)
 ```
 
-### Manual
+Or set it by hand —
 
 `~/.claude/settings.json`:
 

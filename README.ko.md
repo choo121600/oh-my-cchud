@@ -19,15 +19,12 @@
 ```bash
 /plugin marketplace add choo121600/oh-my-cchud
 /plugin install oh-my-cchud
+/oh-my-cchud:install     # 메인 statusLine 연결 — /plugin update 후 다시 실행
 ```
 
-플러그인은 메인 `statusLine`을 자동 설정할 수 없으므로(`subagentStatusLine`만 가능) 한 번만 연결하세요:
+**Bun**이 PATH에 있어야 합니다(상태줄이 `bun`을 실행). 플러그인은 `subagentStatusLine`만 자동 적용하므로, `/oh-my-cchud:install`이 메인 HUD를 `~/.claude/settings.json`에 **업데이트에도 안 깨지는 고정 런처**로 연결합니다.
 
-```bash
-bun run scripts/install-statusline.ts      # ~/.claude/settings.json 에 statusLine 기록 (백업 생성)
-```
-
-### 수동 연결
+### 수동 연결 (clone)
 
 `~/.claude/settings.json`:
 

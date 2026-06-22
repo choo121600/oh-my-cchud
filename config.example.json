@@ -5,13 +5,15 @@
   "separator": "  ",
   "lines": [
     ["project", "model", "worktree", "git", "pr", "context", "rate"],
-    ["effort", "thinking", "agents", "todos"]
+    ["status", "effort", "thinking", "agents", "todos"]
   ],
   "//opt-in": "omitted by default; add to a line to enable: cost (flat-rate artifact for Pro/Max; rate is the real signal) · tools (redundant with Claude Code's live UI + lags) · output_style (rarely-changed, user-set, drives no action)",
-  "//segments": "available: model context rate cost git tools todos agents worktree output_style effort thinking pr",
+  "//segments": "available: model context rate cost git tools todos agents worktree output_style effort thinking pr status",
   "context": { "barWidth": 14, "warn": 70, "crit": 90 },
   "rate": { "warn": 60, "crit": 85, "reset": "relative" },
   "//rate.reset": "초기화 표시: relative (in 2h12m) | clock (14:30) | off",
   "transcript": { "tailBytes": 131072, "recentTools": 3 },
-  "git": { "cacheMs": 3000 }
+  "git": { "cacheMs": 3000 },
+  "status": { "ttlMs": 60000, "staleMaxMs": 900000, "component": "Claude Code" },
+  "//status": "Claude Code service status (status.claude.com). Self-hides while operational; shows only during an incident. Remove `status` from lines to disable. component = which Statuspage component to watch."
 }

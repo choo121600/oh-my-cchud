@@ -14,9 +14,18 @@ import { loadConfig } from "./config";
 import { resolveTheme } from "./theme";
 import { parseTranscript } from "./transcript";
 import { render } from "./render";
+import { runStatusFetch } from "./status";
 import type { StatuslineInput, Ctx } from "./types";
 
 async function main() {
+  // Detached refresh mode: the `status` segment re-spawns us with this flag to
+  // refresh the service-status cache off the render path. Do that and exit —
+  // don't read stdin or render anything.
+  if (process.argv.includes("--fetch-status")) {
+    await runStatusFetch();
+    return;
+  }
+
   const config = loadConfig();
 
   const raw = await Bun.stdin.text();

@@ -4,6 +4,7 @@
 
 import { c, link } from "./ansi";
 import { cached } from "./cache";
+import { readStatusCache, kickStatusFetch } from "./status";
 import type { Ctx } from "./types";
 
 export type Segment = (ctx: Ctx) => string | null;
@@ -186,6 +187,59 @@ function pr({ input, theme }: Ctx): string | null {
   return p.url ? c.blue(link(text, p.url)) : c.blue(text);
 }
 
+// Claude service status, scoped to the Claude Code component. Self-hides while
+// all is well: it renders ONLY when Claude Code is non-operational, or an
+// unresolved incident explicitly lists Claude Code among its affected
+// components — the moment when "is it me or is it them?" actually matters.
+// Data comes from a global cache refreshed out-of-band (see ./status.ts); the
+// render here never touches the network.
+function status({ config, theme }: Ctx): string | null {
+  const cfg = config.status;
+  const cache = readStatusCache();
+
+  // Missing or past its TTL → trigger a background refresh (debounced). Either
+  // way we render from whatever we have right now: nothing, or the last snapshot.
+  if (!cache || cache.ageMs > cfg.ttlMs) kickStatusFetch();
+  if (!cache) return null;
+  // Too old to trust (offline a while) — stay silent rather than show stale state.
+  if (cache.ageMs > cfg.staleMaxMs) return null;
+
+  const { summary } = cache;
+  const comp = summary.components?.find((s) => s.name === cfg.component);
+  if (!comp) return null;
+
+  // Only incidents that explicitly affect Claude Code — keeps us from firing on
+  // claude.ai / API-only incidents the user can't act on from here.
+  const incident = summary.incidents?.find(
+    (i) => i.status !== "resolved" && i.components?.some((c) => c.id === comp.id),
+  );
+
+  const operational = comp.status === "operational";
+  if (operational && !incident) return null; // self-hide: all good
+
+  const severe =
+    comp.status === "major_outage" ||
+    comp.status === "partial_outage" ||
+    incident?.impact === "major" ||
+    incident?.impact === "critical";
+  const color = severe ? theme.crit : theme.warn;
+  const word = prettyStatus(operational ? "incident" : comp.status);
+  const head = color(`${theme.glyphs.status} ${cfg.component}: ${word}`);
+  const detail = incident ? ` ${theme.muted(`— ${truncate(incident.name, 32)}`)}` : "";
+  return head + detail;
+}
+
+function prettyStatus(s: string): string {
+  const map: Record<string, string> = {
+    incident: "incident",
+    degraded_performance: "degraded",
+    partial_outage: "partial outage",
+    major_outage: "major outage",
+    under_maintenance: "maintenance",
+  };
+  return map[s] ?? s.replace(/_/g, " ");
+}
+
 function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n - 1) + "…" : s;
 }
@@ -205,4 +259,5 @@ export const SEGMENTS: Record<string, Segment> = {
   effort,
   thinking,
   pr,
+  status,
 };

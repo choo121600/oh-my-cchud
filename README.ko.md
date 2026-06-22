@@ -78,6 +78,7 @@
 | `agents` | 실행 중 서브에이전트 | transcript | ✅ |
 | `todos` | ☑ 완료/전체 + 진행 항목 | transcript | ✅ |
 | `pr` | PR 번호 + 리뷰 상태 (클릭 링크, 열린 PR 있을 때만) | stdin | ✅ |
+| `status` | Claude Code 서비스 상태 — 장애/인시던트일 때만 표시 | status.claude.com | ✅ |
 | `cost` | 비용 $ + 경과시간 `(12m34s)` | stdin | ⬜ |
 | `tools` | ● 실행 중 / 최근 툴 | transcript | ⬜ |
 | `output_style` | 비-default output style 이름 | stdin | ⬜ |

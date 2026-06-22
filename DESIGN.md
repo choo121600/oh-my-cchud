@@ -13,6 +13,7 @@ but not for "what is Claude doing right now" — so we also tail-read the transc
 |--------|-----|--------|
 | **statusLine JSON** (stdin) | injected by Claude Code on every refresh | model · `context_window.used_percentage` (native, exact) · `rate_limits` (used % + `resets_at`) · cost · git/worktree · effort/thinking |
 | **transcript JSONL** (`transcript_path`) | we read the tail of the session log | active tool · subagents (`isSidechain` / `Task`) · todo progress (`TodoWrite`) |
+| **status.claude.com** (Statuspage) | a detached child refreshes a global cache off the render path | Claude Code service status + active incidents (the `status` segment) |
 
 ## Performance
 
@@ -60,8 +61,9 @@ One rule: **show only signals that aren't already on screen and that you'd act o
 answer "how much headroom is left." `pr`/`worktree` auto-hide when absent, so they
 only appear when relevant.
 
-**Line 2** — reasoning state first (`effort`/`thinking` — what's driving token burn),
-then the activity Claude Code's main UI does *not* persist: subagents and todos.
+**Line 2** — `status` leads (silent unless Claude Code is having an incident), then
+reasoning state (`effort`/`thinking` — what's driving token burn), then the activity
+Claude Code's main UI does *not* persist: subagents and todos.
 
 Default-on niceties:
 - **`context`** is the headline because the color thresholds *are* the compact cue
@@ -72,6 +74,18 @@ Default-on niceties:
   "resets in 3 days."
 - **`effort`** is colored by intensity, since higher effort burns more tokens:
   `xhigh`/`max` → red (crit), `high` → yellow (warn), `medium` → cyan, `low` → dim.
+- **`status`** answers "is it me, or is it Claude?" — the one question the rest of the
+  HUD can't. It's the only segment that touches the network, so it earns its keep two
+  ways. **It self-hides**: nothing renders while Claude Code is operational, so the
+  default-on cost is zero pixels and it only ever speaks to *report* an incident — no
+  always-on green badge to tune out. And **it never blocks**: a fetch measured ~70ms,
+  larger than the whole HUD budget, so the render path only ever reads a global tmpdir
+  cache (TTL 60s). When that cache is stale, we fire a detached child (`--fetch-status`,
+  the same binary re-invoking itself — no curl/PATH assumptions) to refresh it for the
+  *next* render, debounced by a lock file so a burst of refreshes can't spawn a fetch
+  storm. Offline, timeout, or a too-old snapshot all fall back to silence, never a stale
+  alarm. Scoped to the **Claude Code** component plus any incident that explicitly lists
+  it — so a claude.ai-only blip won't fire here.
 
 Off by default (segments still exist; add the name to a line to enable):
 
@@ -102,7 +116,8 @@ oh-my-cchud/
 │   ├── subagent-statusline.ts  # per-subagent row overrides
 │   ├── transcript.ts           # tail-read JSONL parser
 │   ├── cache.ts                # session_id-keyed disk cache
-│   ├── segments.ts             # segment registry (14)
+│   ├── status.ts               # status.claude.com fetch + global cache (off-render-path)
+│   ├── segments.ts             # segment registry (15)
 │   ├── render.ts               # line assembly
 │   ├── config.ts               # config loading + defaults
 │   ├── theme.ts                # themes (default/nerd/ascii)

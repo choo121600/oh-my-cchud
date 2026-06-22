@@ -16,6 +16,12 @@ export interface Config {
   rate: { warn: number; crit: number; reset: "relative" | "clock" | "off" };
   transcript: { tailBytes: number; recentTools: number };
   git: { cacheMs: number };
+  // Claude service status (status.claude.com). The `status` segment self-hides
+  // while Claude Code is operational; it only appears during an outage/incident.
+  //   ttlMs       — how long a cached snapshot is fresh before a background refresh
+  //   staleMaxMs  — past this age the snapshot is too old to trust → stay silent
+  //   component   — which Statuspage component to watch
+  status: { ttlMs: number; staleMaxMs: number; component: string };
 }
 
 export const DEFAULT_CONFIG: Config = {
@@ -32,15 +38,20 @@ export const DEFAULT_CONFIG: Config = {
   //   `tools`        — the active tool is already shown live in Claude Code's UI,
   //                    and the status line refreshes on a lag → redundant + staler.
   //   `output_style` — a rarely-changed, user-set value that drives no action.
+  // `status` leads line 2: invisible while Claude Code is healthy, and lights up
+  // (yellow/red) only during a service incident — exactly when you want to know
+  // it's them, not you. It sits on the activity line, ahead of effort/thinking,
+  // so an outage is the first thing that line shows when it shows anything.
   lines: [
     ["project", "model", "worktree", "git", "pr", "context", "rate"],
-    ["effort", "thinking", "agents", "todos"],
+    ["status", "effort", "thinking", "agents", "todos"],
   ],
   context: { barWidth: 14, warn: 70, crit: 90 },
   rate: { warn: 60, crit: 85, reset: "relative" },
   // 128 KiB tail keeps parse cost flat regardless of total transcript size.
   transcript: { tailBytes: 128 * 1024, recentTools: 3 },
   git: { cacheMs: 3000 },
+  status: { ttlMs: 60_000, staleMaxMs: 15 * 60_000, component: "Claude Code" },
 };
 
 function readJson(path: string): Partial<Config> | null {
@@ -74,6 +85,7 @@ export function loadConfig(): Config {
     rate: { ...DEFAULT_CONFIG.rate, ...user?.rate },
     transcript: { ...DEFAULT_CONFIG.transcript, ...user?.transcript },
     git: { ...DEFAULT_CONFIG.git, ...user?.git },
+    status: { ...DEFAULT_CONFIG.status, ...user?.status },
   };
 
   // Env override wins last — handy for `OH_MY_CCHUD_THEME=ascii` previews.

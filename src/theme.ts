@@ -18,7 +18,8 @@ export type GlyphKey =
   | "worktree"
   | "effort"
   | "thinking"
-  | "pr";
+  | "pr"
+  | "status";
 
 export interface Theme {
   accent: ColorFn; // primary (model, headings)
@@ -60,6 +61,7 @@ const THEMES: Record<string, Theme> = {
       effort: "✱",
       thinking: "✻",
       pr: "⇡",
+      status: "⚠",
     },
   },
   // Nerd Font glyphs — requires a patched font (https://www.nerdfonts.com).
@@ -78,6 +80,7 @@ const THEMES: Record<string, Theme> = {
       effort: "",
       thinking: "",
       pr: "",
+      status: "",
     },
   },
   // Pure ASCII — for minimal terminals or when Unicode glyphs render as tofu.
@@ -96,6 +99,7 @@ const THEMES: Record<string, Theme> = {
       effort: "eff:",
       thinking: "~",
       pr: "PR",
+      status: "[!]",
     },
   },
 };

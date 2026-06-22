@@ -87,6 +87,7 @@ set only what you change). Also read from `OH_MY_CCHUD_CONFIG` or `${CLAUDE_PLUG
 | `agents` | running subagents | transcript | ✅ |
 | `todos` | ☑ done/total + active item | transcript | ✅ |
 | `pr` | PR number + review state (clickable; only with an open PR) | stdin | ✅ |
+| `status` | Claude Code service status — shows only during an incident/outage | status.claude.com | ✅ |
 | `cost` | cost $ + elapsed `(12m34s)` | stdin | ⬜ |
 | `tools` | ● active / recent tools | transcript | ⬜ |
 | `output_style` | non-default output style name | stdin | ⬜ |

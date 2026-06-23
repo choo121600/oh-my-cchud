@@ -1,0 +1,69 @@
+name: release
+
+# Backstop that keeps GitHub releases in lock-step with package.json.
+# Whenever a version bump lands on main and no matching tag/release exists yet,
+# this typechecks, then tags + publishes the release automatically — so a forgotten
+# `git tag` / `gh release` step can no longer leave releases lagging behind the code.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'package.json'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read version from package.json
+        id: version
+        run: |
+          VERSION=$(jq -r .version package.json)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Check whether the release already exists
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.version.outputs.tag }}" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Release ${{ steps.version.outputs.tag }} already exists — nothing to do."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "No release for ${{ steps.version.outputs.tag }} yet — will publish."
+          fi
+
+      - name: Set up Bun
+        if: steps.check.outputs.exists == 'false'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        if: steps.check.outputs.exists == 'false'
+        run: bun install
+
+      - name: Typecheck
+        if: steps.check.outputs.exists == 'false'
+        run: bun run typecheck
+
+      - name: Create tag and publish GitHub release
+        if: steps.check.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --target "$GITHUB_SHA" \
+            --title "${{ steps.version.outputs.tag }}" \
+            --generate-notes \
+            --latest

@@ -12,9 +12,11 @@
     "demo": "bun run scripts/demo.ts",
     "build": "bun run scripts/build.ts",
     "install-statusline": "bun run scripts/install-statusline.ts",
-    "typecheck": "bun --bun tsc --noEmit"
+    "typecheck": "bun --bun tsc --noEmit",
+    "release": "bun run scripts/release.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^6.0.3"
   }
 }

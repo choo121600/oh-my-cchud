@@ -112,6 +112,18 @@ bun run build   # -> dist/cchud (self-contained; no bun on PATH needed)
 bun run scripts/demo.ts [transcript.jsonl]   # all three themes, no live session needed
 ```
 
+## Releasing
+
+One command bumps the version, commits, and pushes:
+
+```bash
+bun run release patch   # 0.1.3 -> 0.1.4   (also: minor | major | x.y.z)
+```
+
+Once the bump lands on `main`, the [`release` workflow](.github/workflows/release.yml)
+typechecks, then tags and publishes the matching GitHub release automatically — so a
+forgotten `git tag` / `gh release` can never leave releases lagging behind the code.
+
 ## More
 
 - Architecture, performance & design rationale — [DESIGN.md](DESIGN.md)

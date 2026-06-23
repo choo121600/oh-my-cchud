@@ -17,7 +17,8 @@ export interface Config {
   transcript: { tailBytes: number; recentTools: number };
   git: { cacheMs: number };
   // Claude service status (status.claude.com). The `status` segment self-hides
-  // while Claude Code is operational; it only appears during an outage/incident.
+  // while the Claude Code component is operational; it appears only when that
+  // component itself is degraded/down (answering "can I use Claude Code now?").
   //   ttlMs       — how long a cached snapshot is fresh before a background refresh
   //   staleMaxMs  — past this age the snapshot is too old to trust → stay silent
   //   component   — which Statuspage component to watch
@@ -31,20 +32,23 @@ export const DEFAULT_CONFIG: Config = {
   // /compact decision, rate% the quota — both answer "how much headroom is
   // left"). `pr`/`worktree` auto-hide when absent, so they only show when relevant.
   // Line 2 leads with reasoning state (effort/thinking — what's driving token
-  // burn) then the activity Claude Code's main UI does NOT persist: subagents
-  // and todo progress.
+  // burn), then `status` (silent unless the Claude Code component is degraded/down),
+  // then the activity Claude Code's main UI does NOT persist: subagents and todos.
   // Omitted by default (segments still available, add to a line to enable):
   //   `cost`         — flat-rate artifact for Pro/Max; rate_limits is the real signal.
   //   `tools`        — the active tool is already shown live in Claude Code's UI,
   //                    and the status line refreshes on a lag → redundant + staler.
   //   `output_style` — a rarely-changed, user-set value that drives no action.
-  // `status` leads line 2: invisible while Claude Code is healthy, and lights up
-  // (yellow/red) only during a service incident — exactly when you want to know
-  // it's them, not you. It sits on the activity line, ahead of effort/thinking,
-  // so an outage is the first thing that line shows when it shows anything.
+  // `status` sits on line 2 just after the reasoning state: invisible while the
+  // Claude Code component is operational (it renders empty and is filtered out, so
+  // the line is identical to having no status segment at all), and lights up
+  // (yellow/red) only when that component is degraded/down. Placing it after
+  // effort/thinking keeps that always-present reasoning anchor left-aligned and
+  // stable; the outage badge inserts to its right — its color alone is enough to
+  // catch the eye without leading the line.
   lines: [
     ["project", "model", "worktree", "git", "pr", "context", "rate"],
-    ["status", "effort", "thinking", "agents", "todos"],
+    ["effort", "thinking", "status", "agents", "todos"],
   ],
   context: { barWidth: 14, warn: 70, crit: 90 },
   rate: { warn: 60, crit: 85, reset: "relative" },

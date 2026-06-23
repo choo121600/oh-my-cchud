@@ -187,12 +187,15 @@ function pr({ input, theme }: Ctx): string | null {
   return p.url ? c.blue(link(text, p.url)) : c.blue(text);
 }
 
-// Claude service status, scoped to the Claude Code component. Self-hides while
-// all is well: it renders ONLY when Claude Code is non-operational, or an
-// unresolved incident explicitly lists Claude Code among its affected
-// components — the moment when "is it me or is it them?" actually matters.
-// Data comes from a global cache refreshed out-of-band (see ./status.ts); the
-// render here never touches the network.
+// Claude service status, scoped to the Claude Code component. Answers exactly
+// one question: "can I use Claude Code right now?" — so it's driven solely by
+// the Claude Code component's own status. It stays silent while that status is
+// `operational`, even when an unresolved incident tags Claude Code among its
+// affected surfaces: those are usually model-/surface-specific (e.g. one model
+// suspended) and don't stop you using Claude Code with another model. A matching
+// incident is pulled in only to explain WHY it's down once the component itself
+// has flipped. Data comes from a global cache refreshed out-of-band (see
+// ./status.ts); the render here never touches the network.
 function status({ config, theme }: Ctx): string | null {
   const cfg = config.status;
   const cache = readStatusCache();
@@ -208,30 +211,24 @@ function status({ config, theme }: Ctx): string | null {
   const comp = summary.components?.find((s) => s.name === cfg.component);
   if (!comp) return null;
 
-  // Only incidents that explicitly affect Claude Code — keeps us from firing on
-  // claude.ai / API-only incidents the user can't act on from here.
+  // The component status IS the answer. Operational → usable → stay silent.
+  if (comp.status === "operational") return null;
+
+  // Non-operational: pull a matching unresolved incident purely to caption WHY.
   const incident = summary.incidents?.find(
     (i) => i.status !== "resolved" && i.components?.some((c) => c.id === comp.id),
   );
 
-  const operational = comp.status === "operational";
-  if (operational && !incident) return null; // self-hide: all good
-
   const severe =
-    comp.status === "major_outage" ||
-    comp.status === "partial_outage" ||
-    incident?.impact === "major" ||
-    incident?.impact === "critical";
+    comp.status === "major_outage" || comp.status === "partial_outage";
   const color = severe ? theme.crit : theme.warn;
-  const word = prettyStatus(operational ? "incident" : comp.status);
-  const head = color(`${theme.glyphs.status} ${cfg.component}: ${word}`);
+  const head = color(`${theme.glyphs.status} ${cfg.component}: ${prettyStatus(comp.status)}`);
   const detail = incident ? ` ${theme.muted(`— ${truncate(incident.name, 32)}`)}` : "";
   return head + detail;
 }
 
 function prettyStatus(s: string): string {
   const map: Record<string, string> = {
-    incident: "incident",
     degraded_performance: "degraded",
     partial_outage: "partial outage",
     major_outage: "major outage",

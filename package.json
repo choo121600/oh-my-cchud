@@ -1,6 +1,6 @@
 {
   "name": "oh-my-cchud",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Performance-focused HUD for Claude Code (statusLine JSON + transcript JSONL).",
   "type": "module",
   "private": true,

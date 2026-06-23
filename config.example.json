@@ -5,7 +5,7 @@
   "separator": "  ",
   "lines": [
     ["project", "model", "worktree", "git", "pr", "context", "rate"],
-    ["status", "effort", "thinking", "agents", "todos"]
+    ["effort", "thinking", "status", "agents", "todos"]
   ],
   "//opt-in": "omitted by default; add to a line to enable: cost (flat-rate artifact for Pro/Max; rate is the real signal) · tools (redundant with Claude Code's live UI + lags) · output_style (rarely-changed, user-set, drives no action)",
   "//segments": "available: model context rate cost git tools todos agents worktree output_style effort thinking pr status",
@@ -15,5 +15,5 @@
   "transcript": { "tailBytes": 131072, "recentTools": 3 },
   "git": { "cacheMs": 3000 },
   "status": { "ttlMs": 60000, "staleMaxMs": 900000, "component": "Claude Code" },
-  "//status": "Claude Code service status (status.claude.com). Self-hides while operational; shows only during an incident. Remove `status` from lines to disable. component = which Statuspage component to watch."
+  "//status": "Claude Code service status (status.claude.com). Driven by the Claude Code component status — self-hides while operational, shows only when that component is degraded/down (answers 'can I use Claude Code now?'). Remove `status` from lines to disable. component = which Statuspage component to watch."
 }

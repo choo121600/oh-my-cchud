@@ -61,9 +61,16 @@ One rule: **show only signals that aren't already on screen and that you'd act o
 answer "how much headroom is left." `pr`/`worktree` auto-hide when absent, so they
 only appear when relevant.
 
-**Line 2** — `status` leads (silent unless Claude Code is having an incident), then
-reasoning state (`effort`/`thinking` — what's driving token burn), then the activity
-Claude Code's main UI does *not* persist: subagents and todos.
+**Line 2** — reasoning state leads (`effort`/`thinking` — what's driving token
+burn), then `status` (silent unless the Claude Code component is degraded/down),
+then the activity Claude Code's main UI does *not* persist: subagents and todos.
+`status` answers one question — "can I use Claude Code right now?" — so it's driven
+solely by the Claude Code component status, not by any incident that merely tags
+Claude Code (those are often model-/surface-specific and don't block use); a matching
+incident is pulled in only to caption *why* once the component itself has flipped.
+It renders empty while operational and is filtered out, so it sits *after* the
+reasoning anchor: that keeps `effort`/`thinking` left-aligned and stable, and the
+outage badge just inserts to their right when it lights up.
 
 Default-on niceties:
 - **`context`** is the headline because the color thresholds *are* the compact cue

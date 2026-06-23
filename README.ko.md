@@ -50,7 +50,7 @@
   "theme": "default",
   "lines": [
     ["project", "model", "worktree", "git", "pr", "context", "rate"],
-    ["effort", "thinking", "agents", "todos"]
+    ["effort", "thinking", "status", "agents", "todos"]
   ],
   "context": { "barWidth": 14, "warn": 70, "crit": 90 },
   "rate": { "warn": 60, "crit": 85, "reset": "relative" },
